@@ -1,8 +1,8 @@
 {
     "name": "peopleinside/flarum-ext-antiflood",
-    "description": "Flarum extension to prevent topic/post flooding and limit pending approvals.",
+    "description": "Flarum extension to prevent topic/post flooding, limit pending approvals, and fix emoji rendering in code blocks.",
     "type": "flarum-extension",
-    "keywords": ["flarum", "antiflood", "approval"],
+    "keywords": ["flarum", "antiflood", "approval", "emoji", "code-blocks"],
     "license": "MIT",
     "authors": [
         {
