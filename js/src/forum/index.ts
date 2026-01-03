@@ -7,10 +7,20 @@ app.initializers.add('peopleinside/antiflood', () => {
   // Initialize on page load
   fixEmojiInCodeBlocks();
   
+  // Debounce function to limit mutation observer calls
+  let timeoutId: number | null = null;
+  const debouncedFix = () => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    timeoutId = window.setTimeout(() => {
+      fixEmojiInCodeBlocks();
+      timeoutId = null;
+    }, 100);
+  };
+  
   // Watch for new content being added (e.g., new posts, live updates)
-  const observer = new MutationObserver(() => {
-    fixEmojiInCodeBlocks();
-  });
+  const observer = new MutationObserver(debouncedFix);
   
   observer.observe(document.body, {
     childList: true,
@@ -38,9 +48,14 @@ function fixEmojiInCodeBlocks() {
 function needsEmojiFixing(element: HTMLElement): boolean {
   // Check if element contains emoji unicode ranges
   const text = element.textContent || '';
-  // Comprehensive emoji unicode ranges
-  // Emoticons, Dingbats, Miscellaneous Symbols and Pictographs, Supplemental Symbols and Pictographs
-  const emojiRegex = /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu;
+  // Comprehensive emoji unicode ranges including:
+  // - Basic emoticons and symbols (2600-27BF)
+  // - Miscellaneous Symbols and Pictographs (1F300-1F5FF)
+  // - Emoticons (1F600-1F64F)
+  // - Transport and Map Symbols (1F680-1F6FF)
+  // - Supplemental Symbols and Pictographs (1F900-1F9FF)
+  // - Skin tone modifiers (1F3FB-1F3FF)
+  const emojiRegex = /[\u{1F300}-\u{1F9FF}\u{2600}-\u{27BF}]/gu;
   return emojiRegex.test(text);
 }
 
@@ -48,10 +63,9 @@ function applyEmojiRendering(element: HTMLElement) {
   // Ensure emojis are rendered properly by adding emoji fonts to font stack
   const currentFont = window.getComputedStyle(element).fontFamily;
   
-  // Add emoji fonts to the font stack if not already present
-  if (!currentFont.includes('emoji')) {
-    element.style.fontFamily = `${currentFont}, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"`;
-  }
+  // Always append emoji fonts to ensure proper rendering
+  // This is safe and doesn't hurt even if some fonts are already in the stack
+  element.style.fontFamily = `${currentFont}, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"`;
   
   // Ensure text rendering supports color emoji
   element.style.textRendering = 'optimizeLegibility';
@@ -59,4 +73,5 @@ function applyEmojiRendering(element: HTMLElement) {
   // Mark as processed to avoid repeated processing
   element.setAttribute('data-emoji-fixed', 'true');
 }
+
 
