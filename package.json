@@ -1,0 +1,17 @@
+{
+  "name": "@peopleinside/flarum-ext-antiflood",
+  "version": "1.0.0",
+  "description": "Flarum extension to prevent flooding and ensure emoji display in code blocks",
+  "private": true,
+  "main": "js/dist/forum.js",
+  "scripts": {
+    "build": "webpack --mode production",
+    "watch": "webpack --mode development --watch",
+    "dev": "webpack --mode development"
+  },
+  "devDependencies": {
+    "flarum-webpack-config": "^2.0.0",
+    "webpack": "^5.0.0",
+    "webpack-cli": "^5.0.0"
+  }
+}
