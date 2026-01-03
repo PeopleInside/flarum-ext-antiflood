@@ -39,7 +39,8 @@ function needsEmojiFixing(element: HTMLElement): boolean {
   // Check if element contains emoji unicode ranges
   const text = element.textContent || '';
   // Comprehensive emoji unicode ranges
-  const emojiRegex = /[\u{1F300}-\u{1F9FF}|\u{2600}-\u{26FF}|\u{2700}-\u{27BF}]/gu;
+  // Emoticons, Dingbats, Miscellaneous Symbols and Pictographs, Supplemental Symbols and Pictographs
+  const emojiRegex = /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu;
   return emojiRegex.test(text);
 }
 
