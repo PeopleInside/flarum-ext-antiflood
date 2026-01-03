@@ -1,16 +1,15 @@
 <?php
 
 use Flarum\Extend;
-use Flarum\Discussion\Event\Saving as DiscussionSaving;
-use Flarum\Post\Event\Saving as PostSaving;
 use Peopleinside\AntiFlood\FloodGuard;
 
 return [
-    (new Extend\Frontend('forum'))
-        ->js(__DIR__.'/dist/forum.js')
-        ->css(__DIR__.'/resources/less/forum.less'),
-    
     (new Extend\Event())
-        ->listen(DiscussionSaving::class, [FloodGuard::class, 'handleDiscussionSaving'])
-        ->listen(PostSaving::class, [FloodGuard::class, 'handlePostSaving']),
+        ->listen(\Flarum\Discussion\Event\Saving::class, [FloodGuard::class, 'handleDiscussionSaving']),
+    (new Extend\Event())
+        ->listen(\Flarum\Post\Event\Saving::class, [FloodGuard::class, 'handlePostSaving']),
+    (new Extend\Event())
+    ->listen(DiscussionSaving::class, [FloodGuard::class, 'handleDiscussionSaving'])
+    ->listen(PostSaving::class, [FloodGuard::class, 'handlePostSaving']),
+
 ];
