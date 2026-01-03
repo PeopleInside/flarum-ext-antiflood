@@ -1,0 +1,16 @@
+// Ensure emojis in code blocks are visible
+pre code,
+code {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji' !important;
+  text-rendering: optimizeLegibility;
+}
+
+// Specific styling for multi-line code blocks to preserve emoji rendering
+pre {
+  code {
+    display: block;
+    unicode-bidi: embed;
+    white-space: pre;
+    word-wrap: normal;
+  }
+}

@@ -28,6 +28,11 @@
             "icon": {
                 "name": "fas fa-shield-alt"
             }
+        },
+        "flarum-cli": {
+            "modules": {
+                "forum": true
+            }
         }
     },
     "scripts": {
