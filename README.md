@@ -2,9 +2,17 @@
 
 **AntiFlood** is a Flarum extension designed to limit topic and post flooding and ensure that users do not exceed a specific number of pending approvals. This extension aims to prevent spam and improve the moderation process.
 
+## Compatibility
+
+| Flarum Version | Supported |
+|----------------|-----------|
+| 1.x            | ✅        |
+| 2.x            | ✅        |
+
 ## Features
 - Limits the creation of **maximum 3 topics per 5 minutes** for each user.
-- Blocks topic/post creation if there are already **5 posts or topics pending approval**.
+- Blocks topic/post creation if there are already **6 posts or topics pending approval**.
+- Administrators are exempt from all restrictions.
 
 ## Installation
 
@@ -22,7 +30,7 @@ composer require peopleinside/flarum-ext-antiflood
 composer update peopleinside/flarum-ext-antiflood
 ```
 
-### 3. Unistall via Composer
+### 3. Uninstall via Composer
 
 ```bash
 composer remove peopleinside/flarum-ext-antiflood

@@ -8,35 +8,43 @@ use Flarum\Post\Post;
 use Flarum\User\User;
 use Flarum\Discussion\Event\Saving as DiscussionSaving;
 use Flarum\Post\Event\Saving as PostSaving;
-use Illuminate\Support\Arr;
 use Flarum\User\Exception\PermissionDeniedException;
+use Illuminate\Contracts\Translation\Translator;
 
 class FloodGuard
 {
-    protected $maxPending = 6;
-    protected $floodLimit = 3;
-    protected $floodIntervalMinutes = 5;
+    protected int $maxPending = 6;
+    protected int $floodLimit = 3;
+    protected int $floodIntervalMinutes = 5;
 
-    public function handleDiscussionSaving(DiscussionSaving $event)
+    public function __construct(
+        private Translator $translator
+    ) {}
+
+    public function handleDiscussionSaving(DiscussionSaving $event): void
     {
         $actor = $event->actor;
 
-        if ($actor->isAdmin()) return;
+        if ($actor->isGuest() || $actor->isAdmin()) {
+            return;
+        }
 
         $this->checkPending($actor);
         $this->checkFlooding($actor, Discussion::class);
     }
 
-    public function handlePostSaving(PostSaving $event)
+    public function handlePostSaving(PostSaving $event): void
     {
         $actor = $event->actor;
 
-        if ($actor->isAdmin()) return;
+        if ($actor->isGuest() || $actor->isAdmin()) {
+            return;
+        }
 
         $this->checkPending($actor);
     }
 
-    protected function checkPending(User $actor)
+    protected function checkPending(User $actor): void
     {
         $pendingPosts = Post::where('user_id', $actor->id)
             ->where('is_approved', false)
@@ -47,20 +55,24 @@ class FloodGuard
             ->count();
 
         if (($pendingPosts + $pendingDiscussions) >= $this->maxPending) {
-            throw new PermissionDeniedException(app('translator')->trans('peopleinside-antiflood.forum.error.pending_limit'));
+            throw new PermissionDeniedException(
+                $this->translator->get('peopleinside-antiflood.forum.error.pending_limit')
+            );
         }
     }
 
-    protected function checkFlooding(User $actor, string $model)
+    protected function checkFlooding(User $actor, string $model): void
     {
         $recentCount = $model::where('user_id', $actor->id)
             ->where('created_at', '>=', Carbon::now()->subMinutes($this->floodIntervalMinutes))
             ->count();
 
         if ($recentCount >= $this->floodLimit) {
-            throw new PermissionDeniedException(app('translator')->trans('peopleinside-antiflood.forum.error.flood_limit', [
-                'minutes' => $this->floodIntervalMinutes
-            ]));
+            throw new PermissionDeniedException(
+                $this->translator->get('peopleinside-antiflood.forum.error.flood_limit', [
+                    'minutes' => $this->floodIntervalMinutes,
+                ])
+            );
         }
     }
 }
