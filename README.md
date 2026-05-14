@@ -14,6 +14,12 @@
 - Blocks topic/post creation if there are already **6 posts or topics pending approval**.
 - Administrators are exempt from all restrictions.
 
+## Disclaimer
+
+This software is provided **"AS IS"**, without any warranty. While it has been tested and reasonable efforts are made to ensure security and reliability, no guarantees are provided. As an open project, anyone may contribute or report issues, but this does not imply endorsement or liability from the maintainers.
+
+**You use this software entirely at your own risk.** The authors and contributors are not liable for any damages, data loss, or unexpected behavior resulting from its use, modification, or distribution. Always review and test the code independently before deploying it in critical or production environments.
+
 ## Installation
 
 ### 1. Install via Composer
