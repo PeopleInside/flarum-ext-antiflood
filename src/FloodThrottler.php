@@ -4,14 +4,14 @@ namespace Peopleinside\AntiFlood;
 
 use Carbon\Carbon;
 use Flarum\Discussion\Discussion;
+use Flarum\Foundation\ValidationException;
+use Flarum\Http\RequestUtil;
 use Flarum\Post\Post;
 use Flarum\User\User;
-use Flarum\Discussion\Event\Saving as DiscussionSaving;
-use Flarum\Post\Event\Saving as PostSaving;
-use Flarum\User\Exception\PermissionDeniedException;
 use Illuminate\Contracts\Translation\Translator;
+use Psr\Http\Message\ServerRequestInterface;
 
-class FloodGuard
+class FloodThrottler
 {
     protected int $maxPending = 6;
     protected int $floodLimit = 3;
@@ -21,27 +21,24 @@ class FloodGuard
         private Translator $translator
     ) {}
 
-    public function handleDiscussionSaving(DiscussionSaving $event): void
+    public function __invoke(ServerRequestInterface $request): ?bool
     {
-        $actor = $event->actor;
+        $actor = RequestUtil::getActor($request);
 
         if ($actor->isGuest() || $actor->isAdmin()) {
-            return;
+            return null;
         }
 
-        $this->checkPending($actor);
-        $this->checkFlooding($actor, Discussion::class);
-    }
+        $routeName = $request->getAttribute('routeName');
 
-    public function handlePostSaving(PostSaving $event): void
-    {
-        $actor = $event->actor;
-
-        if ($actor->isGuest() || $actor->isAdmin()) {
-            return;
+        if ($routeName === 'discussions.create') {
+            $this->checkPending($actor);
+            $this->checkFlooding($actor, Discussion::class);
+        } elseif ($routeName === 'posts.create') {
+            $this->checkPending($actor);
         }
 
-        $this->checkPending($actor);
+        return null;
     }
 
     protected function checkPending(User $actor): void
@@ -55,9 +52,9 @@ class FloodGuard
             ->count();
 
         if (($pendingPosts + $pendingDiscussions) >= $this->maxPending) {
-            throw new PermissionDeniedException(
-                $this->translator->get('peopleinside-antiflood.forum.error.pending_limit')
-            );
+            throw new ValidationException([
+                'content' => $this->translator->get('peopleinside-antiflood.forum.error.pending_limit'),
+            ]);
         }
     }
 
@@ -68,11 +65,11 @@ class FloodGuard
             ->count();
 
         if ($recentCount >= $this->floodLimit) {
-            throw new PermissionDeniedException(
-                $this->translator->get('peopleinside-antiflood.forum.error.flood_limit', [
+            throw new ValidationException([
+                'content' => $this->translator->get('peopleinside-antiflood.forum.error.flood_limit', [
                     'minutes' => $this->floodIntervalMinutes,
-                ])
-            );
+                ]),
+            ]);
         }
     }
 }
