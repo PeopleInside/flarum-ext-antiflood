@@ -1,4 +1,11 @@
 peopleinside-antiflood:
+  admin:
+    extension_description: "Flarum extension to prevent topic/post flooding and limit pending approvals."
+    settings:
+      pending_limit_message_label: "Custom message: pending approval limit reached"
+      pending_limit_message_help: "Replaces the default error message shown when a user reaches the pending posts/topics limit."
+      flood_limit_message_label: "Custom message: flood limit reached"
+      flood_limit_message_help: "Replaces the default error message shown when a user is posting too quickly. You can use {minutes} as placeholder."
   forum:
     error:
       pending_limit: "You have too many posts or topics pending approval. Please wait until some are reviewed before creating new content."

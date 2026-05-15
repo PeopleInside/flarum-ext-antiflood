@@ -10,6 +10,12 @@
             "homepage": "https://github.com/PeopleInside/flarum-ext-antiflood"
         }
     ],
+    "support": {
+        "forum": "https://github.com/PeopleInside/flarum-ext-antiflood/discussions",
+        "issues": "https://github.com/PeopleInside/flarum-ext-antiflood/issues",
+        "security": "https://github.com/PeopleInside/flarum-ext-antiflood/security/policy",
+        "source": "https://github.com/PeopleInside/flarum-ext-antiflood"
+    },
     "require": {
         "php": "^8.0",
         "flarum/core": "^1.0 || ^2.0"
@@ -26,6 +32,7 @@
     "extra": {
         "flarum-extension": {
             "title": "AntiFlood",
+            "description": "peopleinside-antiflood.admin.extension_description",
             "icon": {
                 "name": "fas fa-shield-alt"
             }

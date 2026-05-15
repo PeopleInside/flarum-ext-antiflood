@@ -8,6 +8,9 @@ use Peopleinside\AntiFlood\FloodGuard;
 return [
     new Extend\Locales(__DIR__ . '/locale'),
 
+    (new Extend\Frontend('admin'))
+        ->js(__DIR__ . '/dist/admin.js'),
+
     (new Extend\Event())
         ->listen(DiscussionSaving::class, [FloodGuard::class, 'handleDiscussionSaving'])
         ->listen(PostSaving::class, [FloodGuard::class, 'handlePostSaving']),

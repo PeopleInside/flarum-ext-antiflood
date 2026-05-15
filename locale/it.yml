@@ -1,0 +1,12 @@
+peopleinside-antiflood:
+  admin:
+    extension_description: "Estensione Flarum per prevenire il flooding di discussioni/post e limitare i contenuti in attesa di approvazione."
+    settings:
+      pending_limit_message_label: "Messaggio personalizzato: limite post in attesa raggiunto"
+      pending_limit_message_help: "Sostituisce il messaggio di errore predefinito mostrato quando un utente raggiunge il limite di post/discussioni in attesa."
+      flood_limit_message_label: "Messaggio personalizzato: limite flood raggiunto"
+      flood_limit_message_help: "Sostituisce il messaggio di errore predefinito mostrato quando un utente pubblica troppo velocemente. Puoi usare {minutes} come segnaposto."
+  forum:
+    error:
+      pending_limit: "Hai troppi post o discussioni in attesa di approvazione. Attendi che alcuni vengano moderati prima di creare nuovi contenuti."
+      flood_limit: "Stai pubblicando troppo velocemente. Attendi {minutes} minuti prima di pubblicare di nuovo."
