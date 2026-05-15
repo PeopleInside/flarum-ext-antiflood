@@ -17,5 +17,6 @@ return [
         ->serializeToAdmin('peopleinside-antiflood.flood_limit', 'peopleinside-antiflood.flood_limit')
         ->serializeToAdmin('peopleinside-antiflood.flood_interval_minutes', 'peopleinside-antiflood.flood_interval_minutes')
         ->serializeToAdmin('peopleinside-antiflood.pending_limit_message', 'peopleinside-antiflood.pending_limit_message')
-        ->serializeToAdmin('peopleinside-antiflood.flood_limit_message', 'peopleinside-antiflood.flood_limit_message'),
+        ->serializeToAdmin('peopleinside-antiflood.flood_limit_message', 'peopleinside-antiflood.flood_limit_message')
+        ->serializeToAdmin('peopleinside-antiflood.post_flood_limit', 'peopleinside-antiflood.post_flood_limit'),
 ];

@@ -21,6 +21,14 @@ app.initializers.add('peopleinside-antiflood', () => {
     })
 
     .registerSetting({
+      setting: 'peopleinside-antiflood.post_flood_limit',
+      label: app.translator.trans('peopleinside-antiflood.admin.settings.post_flood_limit_label'),
+      help: app.translator.trans('peopleinside-antiflood.admin.settings.post_flood_limit_help'),
+      type: 'number',
+      min: 0,
+    })
+
+    .registerSetting({
       setting: 'peopleinside-antiflood.flood_interval_minutes',
       label: app.translator.trans('peopleinside-antiflood.admin.settings.flood_interval_minutes_label'),
       help: app.translator.trans('peopleinside-antiflood.admin.settings.flood_interval_minutes_help'),

@@ -31,9 +31,12 @@ class FloodThrottler
 
         if ($routeName === 'discussions.create') {
             $this->checkPending($actor);
-            $this->checkFlooding($actor, Discussion::class);
+            $this->checkFlooding($actor, Discussion::class, $this->floodLimit());
         } elseif ($routeName === 'posts.create') {
             $this->checkPending($actor);
+            if ($this->postFloodLimit() > 0) {
+                $this->checkFlooding($actor, Post::class, $this->postFloodLimit());
+            }
         }
 
         return null;
@@ -54,6 +57,11 @@ class FloodThrottler
         return (int) ($this->settings->get('peopleinside-antiflood.flood_interval_minutes') ?: 5);
     }
 
+    protected function postFloodLimit(): int
+    {
+        return (int) ($this->settings->get('peopleinside-antiflood.post_flood_limit') ?: 0);
+    }
+
     protected function checkPending(User $actor): void
     {
         $pendingPosts = Post::where('user_id', $actor->id)
@@ -72,7 +80,7 @@ class FloodThrottler
         }
     }
 
-    protected function checkFlooding(User $actor, string $model): void
+    protected function checkFlooding(User $actor, string $model, int $limit): void
     {
         $minutes = $this->floodIntervalMinutes();
 
@@ -80,7 +88,7 @@ class FloodThrottler
             ->where('created_at', '>=', Carbon::now()->subMinutes($minutes))
             ->count();
 
-        if ($recentCount >= $this->floodLimit()) {
+        if ($recentCount >= $limit) {
             $custom = $this->settings->get('peopleinside-antiflood.flood_limit_message');
             $message = $custom ?: $this->translator->get('peopleinside-antiflood.forum.error.flood_limit', [
                 'minutes' => $minutes,
