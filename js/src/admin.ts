@@ -80,8 +80,14 @@ if (canRegisterSettings) {
       },
     ];
 
+    const registeredExtensions = new Set<object>();
+
     for (const extensionId of EXTENSION_IDS) {
       const extension = app.extensionData.for(extensionId);
+      if (registeredExtensions.has(extension as object)) {
+        continue;
+      }
+      registeredExtensions.add(extension as object);
 
       for (const setting of settings) {
         extension.registerSetting(setting);
