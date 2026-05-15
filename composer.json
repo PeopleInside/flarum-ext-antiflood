@@ -3,7 +3,7 @@
     "description": "Flarum extension to prevent topic/post flooding and limit pending approvals.",
     "type": "flarum-extension",
     "keywords": ["flarum", "antiflood", "approval"],
-    "license": "MIT",
+    "license": "Apache-2.0",
     "authors": [
         {
             "name": "Peopleinside",
