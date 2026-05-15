@@ -1,12 +1,47 @@
 <?php
 
-use Peopleinside\AntiFlood\FloodGuard;
+use Peopleinside\AntiFlood\FloodThrottler;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Illuminate\Contracts\Translation\Translator;
 
-test('FloodGuard can be instantiated', function () {
+test('FloodThrottler can be instantiated', function () {
     $translator = Mockery::mock(Translator::class);
     $settings = Mockery::mock(SettingsRepositoryInterface::class);
-    $guard = new FloodGuard($translator, $settings);
-    expect($guard)->toBeInstanceOf(FloodGuard::class);
+    $throttler = new FloodThrottler($translator, $settings);
+    expect($throttler)->toBeInstanceOf(FloodThrottler::class);
 });
+
+test('FloodThrottler returns null for guest actors', function () {
+    $translator = Mockery::mock(Translator::class);
+    $settings = Mockery::mock(SettingsRepositoryInterface::class);
+    $throttler = new FloodThrottler($translator, $settings);
+
+    $actor = Mockery::mock(\Flarum\User\User::class);
+    $actor->shouldReceive('isGuest')->andReturn(true);
+    $actor->shouldNotReceive('isAdmin');
+
+    $request = Mockery::mock(\Psr\Http\Message\ServerRequestInterface::class);
+    $request->shouldReceive('getAttribute')
+        ->with('actor')
+        ->andReturn($actor);
+
+    expect($throttler($request))->toBeNull();
+});
+
+test('FloodThrottler returns null for admin actors', function () {
+    $translator = Mockery::mock(Translator::class);
+    $settings = Mockery::mock(SettingsRepositoryInterface::class);
+    $throttler = new FloodThrottler($translator, $settings);
+
+    $actor = Mockery::mock(\Flarum\User\User::class);
+    $actor->shouldReceive('isGuest')->andReturn(false);
+    $actor->shouldReceive('isAdmin')->andReturn(true);
+
+    $request = Mockery::mock(\Psr\Http\Message\ServerRequestInterface::class);
+    $request->shouldReceive('getAttribute')
+        ->with('actor')
+        ->andReturn($actor);
+
+    expect($throttler($request))->toBeNull();
+});
+
