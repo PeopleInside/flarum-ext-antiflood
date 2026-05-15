@@ -15,6 +15,7 @@ peopleinside-antiflood:
       flood_interval_minutes_help: "Time window in minutes used to count recent topic or reply creations. Applies to both topic and reply flood limits. Default: 5."
       pending_limit_message_label: "Custom message: pending limit reached"
       pending_limit_message_help: "Override the default error message shown when a user hits the pending-posts limit. Leave empty to use the default."
+      pending_limit_message_help_with_default: "Override the default error message shown when a user hits the pending-posts limit. Leave empty to use the default. Default message (copy and customize if needed): {defaultMessage}"
       flood_limit_message_label: "Custom message: flood limit reached"
       flood_limit_message_help: "Override the default error message shown when a user posts too quickly. Leave empty to use the default."
-      default_message_preview: "Default message (copy and customize if needed)"
+      flood_limit_message_help_with_default: "Override the default error message shown when a user posts too quickly. Leave empty to use the default. Default message (copy and customize if needed): {defaultMessage}"

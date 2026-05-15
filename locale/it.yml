@@ -15,6 +15,7 @@ peopleinside-antiflood:
       flood_interval_minutes_help: "Finestra temporale in minuti usata per contare le creazioni recenti di topic o risposte. Si applica sia al limite flood topic che a quello risposte. Predefinito: 5."
       pending_limit_message_label: "Messaggio personalizzato: limite post in attesa raggiunto"
       pending_limit_message_help: "Sostituisce il messaggio di errore predefinito mostrato quando un utente raggiunge il limite di post in attesa. Lascia vuoto per usare il messaggio predefinito."
+      pending_limit_message_help_with_default: "Sostituisce il messaggio di errore predefinito mostrato quando un utente raggiunge il limite di post in attesa. Lascia vuoto per usare il messaggio predefinito. Messaggio predefinito (copialo e personalizzalo se necessario): {defaultMessage}"
       flood_limit_message_label: "Messaggio personalizzato: limite flood raggiunto"
       flood_limit_message_help: "Sostituisce il messaggio di errore predefinito mostrato quando un utente pubblica troppo velocemente. Lascia vuoto per usare il messaggio predefinito."
-      default_message_preview: "Messaggio predefinito (copialo e personalizzalo se necessario)"
+      flood_limit_message_help_with_default: "Sostituisce il messaggio di errore predefinito mostrato quando un utente pubblica troppo velocemente. Lascia vuoto per usare il messaggio predefinito. Messaggio predefinito (copialo e personalizzalo se necessario): {defaultMessage}"

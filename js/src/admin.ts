@@ -85,14 +85,18 @@ if (canRegisterSettings) {
       {
       setting: 'peopleinside-antiflood.pending_limit_message',
       label: app.translator.trans('peopleinside-antiflood.admin.settings.pending_limit_message_label'),
-      help: `${app.translator.trans('peopleinside-antiflood.admin.settings.pending_limit_message_help')} ${app.translator.trans('peopleinside-antiflood.admin.settings.default_message_preview')}: ${defaultPendingLimitMessage}`,
+      help: app.translator.trans('peopleinside-antiflood.admin.settings.pending_limit_message_help_with_default', {
+        defaultMessage: defaultPendingLimitMessage,
+      }),
       type: 'textarea',
       placeholder: defaultPendingLimitMessage,
       },
       {
       setting: 'peopleinside-antiflood.flood_limit_message',
       label: app.translator.trans('peopleinside-antiflood.admin.settings.flood_limit_message_label'),
-      help: `${app.translator.trans('peopleinside-antiflood.admin.settings.flood_limit_message_help')} ${app.translator.trans('peopleinside-antiflood.admin.settings.default_message_preview')}: ${defaultFloodLimitMessage}`,
+      help: app.translator.trans('peopleinside-antiflood.admin.settings.flood_limit_message_help_with_default', {
+        defaultMessage: defaultFloodLimitMessage,
+      }),
       type: 'textarea',
       placeholder: defaultFloodLimitMessage,
       },
