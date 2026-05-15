@@ -17,3 +17,4 @@ peopleinside-antiflood:
       pending_limit_message_help: "Sostituisce il messaggio di errore predefinito mostrato quando un utente raggiunge il limite di post in attesa. Lascia vuoto per usare il messaggio predefinito."
       flood_limit_message_label: "Messaggio personalizzato: limite flood raggiunto"
       flood_limit_message_help: "Sostituisce il messaggio di errore predefinito mostrato quando un utente pubblica troppo velocemente. Lascia vuoto per usare il messaggio predefinito."
+      default_message_preview: "Messaggio predefinito (copialo e personalizzalo se necessario)"

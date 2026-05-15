@@ -10,7 +10,7 @@ type AdminApp = {
     add: (key: string, callback: () => void) => void;
   };
   translator?: {
-    trans: (key: string) => string;
+    trans: (key: string, parameters?: Record<string, string | number>) => string;
   };
 };
 
@@ -37,8 +37,18 @@ const canRegisterSettings =
   typeof app.extensionData?.for === 'function' &&
   typeof app.translator?.trans === 'function';
 
+const DEFAULT_MAX_PENDING = 6;
+const DEFAULT_FLOOD_LIMIT = 3;
+const DEFAULT_POST_FLOOD_LIMIT = 0;
+const DEFAULT_FLOOD_INTERVAL_MINUTES = 5;
+
 if (canRegisterSettings) {
   app.initializers.add('peopleinside-antiflood', () => {
+    const defaultPendingLimitMessage = app.translator.trans('peopleinside-antiflood.forum.error.pending_limit');
+    const defaultFloodLimitMessage = app.translator.trans('peopleinside-antiflood.forum.error.flood_limit', {
+      minutes: DEFAULT_FLOOD_INTERVAL_MINUTES,
+    });
+
     const settings = [
       {
       setting: 'peopleinside-antiflood.max_pending',
@@ -46,6 +56,7 @@ if (canRegisterSettings) {
       help: app.translator.trans('peopleinside-antiflood.admin.settings.max_pending_help'),
       type: 'number',
       min: 1,
+      placeholder: String(DEFAULT_MAX_PENDING),
       },
       {
       setting: 'peopleinside-antiflood.flood_limit',
@@ -53,6 +64,7 @@ if (canRegisterSettings) {
       help: app.translator.trans('peopleinside-antiflood.admin.settings.flood_limit_help'),
       type: 'number',
       min: 1,
+      placeholder: String(DEFAULT_FLOOD_LIMIT),
       },
       {
       setting: 'peopleinside-antiflood.post_flood_limit',
@@ -60,6 +72,7 @@ if (canRegisterSettings) {
       help: app.translator.trans('peopleinside-antiflood.admin.settings.post_flood_limit_help'),
       type: 'number',
       min: 0,
+      placeholder: String(DEFAULT_POST_FLOOD_LIMIT),
       },
       {
       setting: 'peopleinside-antiflood.flood_interval_minutes',
@@ -67,18 +80,21 @@ if (canRegisterSettings) {
       help: app.translator.trans('peopleinside-antiflood.admin.settings.flood_interval_minutes_help'),
       type: 'number',
       min: 1,
+      placeholder: String(DEFAULT_FLOOD_INTERVAL_MINUTES),
       },
       {
       setting: 'peopleinside-antiflood.pending_limit_message',
       label: app.translator.trans('peopleinside-antiflood.admin.settings.pending_limit_message_label'),
-      help: app.translator.trans('peopleinside-antiflood.admin.settings.pending_limit_message_help'),
+      help: `${app.translator.trans('peopleinside-antiflood.admin.settings.pending_limit_message_help')} ${app.translator.trans('peopleinside-antiflood.admin.settings.default_message_preview')}: ${defaultPendingLimitMessage}`,
       type: 'textarea',
+      placeholder: defaultPendingLimitMessage,
       },
       {
       setting: 'peopleinside-antiflood.flood_limit_message',
       label: app.translator.trans('peopleinside-antiflood.admin.settings.flood_limit_message_label'),
-      help: app.translator.trans('peopleinside-antiflood.admin.settings.flood_limit_message_help'),
+      help: `${app.translator.trans('peopleinside-antiflood.admin.settings.flood_limit_message_help')} ${app.translator.trans('peopleinside-antiflood.admin.settings.default_message_preview')}: ${defaultFloodLimitMessage}`,
       type: 'textarea',
+      placeholder: defaultFloodLimitMessage,
       },
     ];
 

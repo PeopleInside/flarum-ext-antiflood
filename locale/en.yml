@@ -17,3 +17,4 @@ peopleinside-antiflood:
       pending_limit_message_help: "Override the default error message shown when a user hits the pending-posts limit. Leave empty to use the default."
       flood_limit_message_label: "Custom message: flood limit reached"
       flood_limit_message_help: "Override the default error message shown when a user posts too quickly. Leave empty to use the default."
+      default_message_preview: "Default message (copy and customize if needed)"
