@@ -73,8 +73,10 @@ class FloodThrottler
             ->count();
 
         if (($pendingPosts + $pendingDiscussions) >= $this->maxPending()) {
-            $custom = $this->settings->get('peopleinside-antiflood.pending_limit_message');
-            $message = $custom ?: $this->translator->get('peopleinside-antiflood.forum.error.pending_limit');
+            $message = $this->resolveMessage(
+                $this->settings->get('peopleinside-antiflood.pending_limit_message'),
+                'peopleinside-antiflood.forum.error.pending_limit'
+            );
 
             throw new ValidationException(['content' => $message]);
         }
@@ -89,12 +91,32 @@ class FloodThrottler
             ->count();
 
         if ($recentCount >= $limit) {
-            $custom = $this->settings->get('peopleinside-antiflood.flood_limit_message');
-            $message = $custom ?: $this->translator->get('peopleinside-antiflood.forum.error.flood_limit', [
-                'minutes' => $minutes,
-            ]);
+            $message = $this->resolveMessage(
+                $this->settings->get('peopleinside-antiflood.flood_limit_message'),
+                'peopleinside-antiflood.forum.error.flood_limit',
+                ['minutes' => $minutes]
+            );
 
             throw new ValidationException(['content' => $message]);
         }
+    }
+
+    protected function resolveMessage(mixed $customSetting, string $defaultKey, array $replacement = []): string
+    {
+        $custom = is_string($customSetting) ? $customSetting : '';
+
+        if (trim($custom) === '') {
+            return $this->translator->get($defaultKey, $replacement);
+        }
+
+        if ($custom === $defaultKey) {
+            return $this->translator->get($defaultKey, $replacement);
+        }
+
+        if (array_key_exists('minutes', $replacement)) {
+            return str_replace('{minutes}', (string) $replacement['minutes'], $custom);
+        }
+
+        return $custom;
     }
 }

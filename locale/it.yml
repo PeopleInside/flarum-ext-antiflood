@@ -4,6 +4,7 @@ peopleinside-antiflood:
       pending_limit: "Hai troppi post o discussioni in attesa di approvazione. Attendi che alcuni vengano revisionati prima di creare nuovi contenuti."
       flood_limit: "Stai pubblicando troppo velocemente. Attendi {minutes} minuti prima di pubblicare di nuovo."
   admin:
+    description: "Previene il flood di topic/risposte e limita i contenuti in attesa di approvazione."
     settings:
       max_pending_label: "Massimo post in attesa"
       max_pending_help: "Numero massimo di post e discussioni che un utente può avere in attesa di approvazione prima di essere bloccato dalla pubblicazione. Predefinito: 6."

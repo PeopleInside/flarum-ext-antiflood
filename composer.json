@@ -26,6 +26,7 @@
     "extra": {
         "flarum-extension": {
             "title": "AntiFlood",
+            "description": "peopleinside-antiflood.admin.description",
             "icon": {
                 "name": "fas fa-shield-alt"
             }
