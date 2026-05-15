@@ -7,18 +7,16 @@ use Flarum\Discussion\Discussion;
 use Flarum\Foundation\ValidationException;
 use Flarum\Http\RequestUtil;
 use Flarum\Post\Post;
+use Flarum\Settings\SettingsRepositoryInterface;
 use Flarum\User\User;
 use Illuminate\Contracts\Translation\Translator;
 use Psr\Http\Message\ServerRequestInterface;
 
 class FloodThrottler
 {
-    protected int $maxPending = 6;
-    protected int $floodLimit = 3;
-    protected int $floodIntervalMinutes = 5;
-
     public function __construct(
-        private Translator $translator
+        private Translator $translator,
+        private SettingsRepositoryInterface $settings
     ) {}
 
     public function __invoke(ServerRequestInterface $request): ?bool
@@ -41,6 +39,21 @@ class FloodThrottler
         return null;
     }
 
+    protected function maxPending(): int
+    {
+        return (int) ($this->settings->get('peopleinside-antiflood.max_pending') ?: 6);
+    }
+
+    protected function floodLimit(): int
+    {
+        return (int) ($this->settings->get('peopleinside-antiflood.flood_limit') ?: 3);
+    }
+
+    protected function floodIntervalMinutes(): int
+    {
+        return (int) ($this->settings->get('peopleinside-antiflood.flood_interval_minutes') ?: 5);
+    }
+
     protected function checkPending(User $actor): void
     {
         $pendingPosts = Post::where('user_id', $actor->id)
@@ -51,25 +64,29 @@ class FloodThrottler
             ->where('is_approved', false)
             ->count();
 
-        if (($pendingPosts + $pendingDiscussions) >= $this->maxPending) {
-            throw new ValidationException([
-                'content' => $this->translator->get('peopleinside-antiflood.forum.error.pending_limit'),
-            ]);
+        if (($pendingPosts + $pendingDiscussions) >= $this->maxPending()) {
+            $custom = $this->settings->get('peopleinside-antiflood.pending_limit_message');
+            $message = $custom ?: $this->translator->get('peopleinside-antiflood.forum.error.pending_limit');
+
+            throw new ValidationException(['content' => $message]);
         }
     }
 
     protected function checkFlooding(User $actor, string $model): void
     {
+        $minutes = $this->floodIntervalMinutes();
+
         $recentCount = $model::where('user_id', $actor->id)
-            ->where('created_at', '>=', Carbon::now()->subMinutes($this->floodIntervalMinutes))
+            ->where('created_at', '>=', Carbon::now()->subMinutes($minutes))
             ->count();
 
-        if ($recentCount >= $this->floodLimit) {
-            throw new ValidationException([
-                'content' => $this->translator->get('peopleinside-antiflood.forum.error.flood_limit', [
-                    'minutes' => $this->floodIntervalMinutes,
-                ]),
+        if ($recentCount >= $this->floodLimit()) {
+            $custom = $this->settings->get('peopleinside-antiflood.flood_limit_message');
+            $message = $custom ?: $this->translator->get('peopleinside-antiflood.forum.error.flood_limit', [
+                'minutes' => $minutes,
             ]);
+
+            throw new ValidationException(['content' => $message]);
         }
     }
 }
