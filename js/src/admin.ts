@@ -1,8 +1,10 @@
+type ExtensionDataContext = {
+  registerSetting: (setting: Record<string, unknown>) => void;
+};
+
 type AdminApp = {
   extensionData?: {
-    for: (extensionId: string) => {
-      registerSetting: (setting: Record<string, unknown>) => void;
-    };
+    for: (extensionId: string) => ExtensionDataContext;
   };
   initializers?: {
     add: (key: string, callback: () => void) => void;
@@ -80,14 +82,14 @@ if (canRegisterSettings) {
       },
     ];
 
-    const registeredExtensions = new Set<object>();
+    const processedExtensionData = new Set<ExtensionDataContext>();
 
     for (const extensionId of EXTENSION_IDS) {
       const extension = app.extensionData.for(extensionId);
-      if (registeredExtensions.has(extension as object)) {
+      if (processedExtensionData.has(extension)) {
         continue;
       }
-      registeredExtensions.add(extension as object);
+      processedExtensionData.add(extension);
 
       for (const setting of settings) {
         extension.registerSetting(setting);
