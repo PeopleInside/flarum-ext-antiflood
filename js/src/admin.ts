@@ -122,10 +122,14 @@ const createResettableSetting = (config: ResettableSettingConfig, resetLabel: st
     if (!m) {
       return null;
     }
+
+    const inputId = `peopleinside-antiflood-setting-${config.setting}`;
+    const resetAriaLabel = `${resetLabel}: ${config.label}`;
     const settingStream = this.setting(config.setting, config.default);
     const value = settingStream() || '';
 
     const inputAttributes: Record<string, unknown> = {
+      id: inputId,
       className: 'FormControl',
       placeholder: config.placeholder,
       style: config.type === 'textarea' ? { flex: '1 1 auto', minHeight: '84px' } : { flex: '1 1 auto' },
@@ -146,7 +150,7 @@ const createResettableSetting = (config: ResettableSettingConfig, resetLabel: st
     }
 
     return m('div', { className: 'Form-group' }, [
-      config.label ? m('label', config.label) : null,
+      config.label ? m('label', { for: inputId }, config.label) : null,
       m('div', { className: 'helpText' }, config.help),
       m(
         'div',
@@ -164,6 +168,7 @@ const createResettableSetting = (config: ResettableSettingConfig, resetLabel: st
             {
               type: 'button',
               className: 'Button',
+              'aria-label': resetAriaLabel,
               onclick: () => {
                 settingStream('');
               },
@@ -192,7 +197,7 @@ if (canRegisterSettings) {
     );
     const resetButtonLabel = translateOrFallback('peopleinside-antiflood.admin.settings.reset_button', 'Reset');
 
-    const settings: ResettableSettingConfig[] = [
+    const settingConfigs: ResettableSettingConfig[] = [
       {
         setting: 'peopleinside-antiflood.max_pending',
         label: app.translator.trans('peopleinside-antiflood.admin.settings.max_pending_label'),
@@ -256,7 +261,7 @@ if (canRegisterSettings) {
       }
       processedExtensionData.add(extension);
 
-      for (const setting of settings) {
+      for (const setting of settingConfigs) {
         extension.registerSetting(createResettableSetting(setting, resetButtonLabel));
       }
     }
