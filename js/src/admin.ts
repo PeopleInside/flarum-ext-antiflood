@@ -26,7 +26,13 @@ const app =
   flarumGlobal?.core?.compat?.['admin/app'] ??
   flarumGlobal?.reg?.get('core', 'admin/app');
 
-if (app?.initializers && app?.extensionData && app?.translator) {
+const canRegisterSettings =
+  app &&
+  typeof app.initializers?.add === 'function' &&
+  typeof app.extensionData?.for === 'function' &&
+  typeof app.translator?.trans === 'function';
+
+if (canRegisterSettings) {
   app.initializers.add('peopleinside-antiflood', () => {
     const settings = [
       {
@@ -79,4 +85,6 @@ if (app?.initializers && app?.extensionData && app?.translator) {
       }
     }
   });
+} else if (typeof console !== 'undefined' && typeof console.warn === 'function') {
+  console.warn('[peopleinside-antiflood] Unable to initialize admin settings: admin app API not available.');
 }
