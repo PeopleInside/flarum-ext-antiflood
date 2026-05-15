@@ -1,5 +1,8 @@
 # AntiFlood Extension for Flarum
 
+[![Packagist](https://img.shields.io/packagist/v/peopleinside/flarum-ext-antiflood.svg)](https://packagist.org/packages/peopleinside/flarum-ext-antiflood)
+[![License](https://img.shields.io/github/license/PeopleInside/flarum-ext-antiflood.svg)](LICENSE)
+
 **AntiFlood** is a Flarum extension that adds longer-term flood protection and pending-approval limits on top of Flarum's built-in throttling.
 
 ## How it relates to Flarum's built-in throttle
