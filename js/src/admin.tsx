@@ -1,5 +1,5 @@
 type ExtensionDataContext = {
-  registerSetting: (setting: Record<string, unknown>) => void;
+  registerSetting: (setting: Record<string, unknown> | ((this: AdminSettingsPageContext) => unknown)) => void;
 };
 
 type AdminApp = {
@@ -12,6 +12,11 @@ type AdminApp = {
   translator?: {
     trans: (key: string, parameters?: Record<string, string | number>) => string;
   };
+};
+
+type AdminSettingsPageContext = {
+  buildSettingComponent: (setting: Record<string, unknown>) => unknown;
+  setting: (key: string, fallback?: string, label?: unknown) => (value?: string) => string;
 };
 
 type FlarumGlobal = {
@@ -48,41 +53,68 @@ if (canRegisterSettings) {
     const defaultFloodLimitMessage = app.translator.trans('peopleinside-antiflood.forum.error.flood_limit', {
       minutes: DEFAULT_FLOOD_INTERVAL_MINUTES,
     });
+    const resetButtonLabel = app.translator.trans('peopleinside-antiflood.admin.settings.reset_button');
+
+    const createResettableSetting = (setting: Record<string, unknown>) => {
+      const settingKey = String(setting.setting ?? '');
+      const settingLabel = setting.label;
+
+      return function (this: AdminSettingsPageContext) {
+        const builtSetting = this.buildSettingComponent(setting);
+        const resetSetting = this.setting(settingKey, '', settingLabel);
+
+        return (
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-end' }}>
+            <div style={{ flex: '1 1 auto' }}>{builtSetting}</div>
+            <button
+              type="button"
+              className="Button"
+              onclick={(event: MouseEvent) => {
+                event.preventDefault();
+                resetSetting('');
+              }}
+            >
+              {resetButtonLabel}
+            </button>
+          </div>
+        );
+      };
+    };
 
     const settings = [
-      {
+      createResettableSetting({
       setting: 'peopleinside-antiflood.max_pending',
       label: app.translator.trans('peopleinside-antiflood.admin.settings.max_pending_label'),
       help: app.translator.trans('peopleinside-antiflood.admin.settings.max_pending_help'),
       type: 'number',
       min: 1,
       placeholder: String(DEFAULT_MAX_PENDING),
-      },
-      {
+      }),
+      createResettableSetting({
       setting: 'peopleinside-antiflood.flood_limit',
       label: app.translator.trans('peopleinside-antiflood.admin.settings.flood_limit_label'),
       help: app.translator.trans('peopleinside-antiflood.admin.settings.flood_limit_help'),
       type: 'number',
       min: 1,
       placeholder: String(DEFAULT_FLOOD_LIMIT),
-      },
-      {
+      }),
+      createResettableSetting({
       setting: 'peopleinside-antiflood.post_flood_limit',
       label: app.translator.trans('peopleinside-antiflood.admin.settings.post_flood_limit_label'),
       help: app.translator.trans('peopleinside-antiflood.admin.settings.post_flood_limit_help'),
       type: 'number',
       min: 0,
       placeholder: String(DEFAULT_POST_FLOOD_LIMIT),
-      },
-      {
+      }),
+      createResettableSetting({
       setting: 'peopleinside-antiflood.flood_interval_minutes',
       label: app.translator.trans('peopleinside-antiflood.admin.settings.flood_interval_minutes_label'),
       help: app.translator.trans('peopleinside-antiflood.admin.settings.flood_interval_minutes_help'),
       type: 'number',
       min: 1,
       placeholder: String(DEFAULT_FLOOD_INTERVAL_MINUTES),
-      },
-      {
+      }),
+      createResettableSetting({
       setting: 'peopleinside-antiflood.pending_limit_message',
       label: app.translator.trans('peopleinside-antiflood.admin.settings.pending_limit_message_label'),
       help: app.translator.trans('peopleinside-antiflood.admin.settings.pending_limit_message_help_with_default', {
@@ -90,8 +122,8 @@ if (canRegisterSettings) {
       }),
       type: 'textarea',
       placeholder: defaultPendingLimitMessage,
-      },
-      {
+      }),
+      createResettableSetting({
       setting: 'peopleinside-antiflood.flood_limit_message',
       label: app.translator.trans('peopleinside-antiflood.admin.settings.flood_limit_message_label'),
       help: app.translator.trans('peopleinside-antiflood.admin.settings.flood_limit_message_help_with_default', {
@@ -99,7 +131,7 @@ if (canRegisterSettings) {
       }),
       type: 'textarea',
       placeholder: defaultFloodLimitMessage,
-      },
+      }),
     ];
 
     const processedExtensionData = new Set<ExtensionDataContext>();

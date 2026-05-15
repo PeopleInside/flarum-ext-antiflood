@@ -1,6 +1,6 @@
 {
     "name": "peopleinside/flarum-ext-antiflood",
-    "description": "Flarum extension to prevent topic/post flooding and limit pending approvals.",
+    "description": "Estensione Flarum per prevenire il flooding di topic/post e limitare le approvazioni in sospeso.",
     "type": "flarum-extension",
     "keywords": ["flarum", "antiflood", "approval"],
     "license": "Apache-2.0",
@@ -10,6 +10,11 @@
             "homepage": "https://github.com/PeopleInside/flarum-ext-antiflood"
         }
     ],
+    "support": {
+        "issues": "https://github.com/PeopleInside/flarum-ext-antiflood/issues",
+        "forum": "https://github.com/PeopleInside/flarum-ext-antiflood/discussions",
+        "security": "https://github.com/PeopleInside/flarum-ext-antiflood/security/policy"
+    },
     "require": {
         "php": "^8.0",
         "flarum/core": "^1.0 || ^2.0"

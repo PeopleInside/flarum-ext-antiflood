@@ -13,6 +13,7 @@ peopleinside-antiflood:
       post_flood_limit_help: "Numero massimo di nuove risposte che un utente può pubblicare nell'intervallo flood prima di essere bloccato. Impostare a 0 per disabilitare (si affida al limite integrato di 10 secondi di Flarum). Predefinito: 0."
       flood_interval_minutes_label: "Intervallo flood (minuti)"
       flood_interval_minutes_help: "Finestra temporale in minuti usata per contare le creazioni recenti di topic o risposte. Si applica sia al limite flood topic che a quello risposte. Predefinito: 5."
+      reset_button: "Reset"
       pending_limit_message_label: "Messaggio personalizzato: limite post in attesa raggiunto"
       pending_limit_message_help: "Sostituisce il messaggio di errore predefinito mostrato quando un utente raggiunge il limite di post in attesa. Lascia vuoto per usare il messaggio predefinito."
       pending_limit_message_help_with_default: "Sostituisce il messaggio di errore predefinito mostrato quando un utente raggiunge il limite di post in attesa. Lascia vuoto per usare il messaggio predefinito. Messaggio predefinito (copialo e personalizzalo se necessario): {defaultMessage}"
