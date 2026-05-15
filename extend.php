@@ -10,7 +10,8 @@ return [
         ->set('peopleinside-antiflood', FloodThrottler::class),
 
     (new Extend\Frontend('admin'))
-        ->js(__DIR__ . '/js/dist/admin.js'),
+        ->js(__DIR__ . '/js/dist/admin.js')
+        ->css(__DIR__ . '/resources/less/admin.less'),
 
     (new Extend\Settings())
         ->serializeToForum('peopleinside-antiflood.max_pending', 'peopleinside-antiflood.max_pending')
