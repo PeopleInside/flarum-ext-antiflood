@@ -4,6 +4,7 @@ peopleinside-antiflood:
       pending_limit: "You have too many posts or topics pending approval. Please wait until some are reviewed before creating new content."
       flood_limit: "You are posting too quickly. Please wait {minutes} minutes before posting again."
   admin:
+    description: "Flarum extension to prevent topic/post flooding and limit pending approvals."
     settings:
       max_pending_label: "Maximum pending posts"
       max_pending_help: "Maximum number of posts and topics a user can have awaiting approval before being blocked from posting. Default: 6."

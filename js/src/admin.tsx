@@ -1,5 +1,7 @@
+import type Mithril from 'mithril';
+
 type ExtensionDataContext = {
-  registerSetting: (setting: Record<string, unknown> | ((this: AdminSettingsPageContext) => unknown)) => void;
+  registerSetting: (setting: Record<string, unknown> | ((this: AdminSettingsPageContext) => Mithril.Children)) => void;
 };
 
 type AdminApp = {
@@ -15,7 +17,7 @@ type AdminApp = {
 };
 
 type AdminSettingsPageContext = {
-  buildSettingComponent: (setting: Record<string, unknown>) => unknown;
+  buildSettingComponent: (setting: Record<string, unknown>) => Mithril.Children;
   setting: (key: string, fallback?: string, label?: unknown) => (value?: string) => string;
 };
 
