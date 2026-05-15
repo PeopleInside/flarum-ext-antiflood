@@ -1,6 +1,24 @@
 # AntiFlood Extension for Flarum
 
-**AntiFlood** is a Flarum extension designed to limit topic and post flooding and ensure that users do not exceed a specific number of pending approvals. This extension aims to prevent spam and improve the moderation process.
+**AntiFlood** is a Flarum extension that adds longer-term flood protection and pending-approval limits on top of Flarum's built-in throttling.
+
+## How it relates to Flarum's built-in throttle
+
+Flarum already ships a `PostCreationThrottler` that blocks any user who posts (a reply **or** a new topic) within **10 seconds** of their previous post. This is a short-term anti-double-posting guard and is always active.
+
+This extension adds **two complementary protections** on top:
+
+| Protection | Applies to | Default | Configurable |
+|---|---|---|---|
+| **Topic flood limit** | New topics (`discussions.create`) | max 3 per 5 min | ✅ |
+| **Reply flood limit** | Replies (`posts.create`) | disabled (0) | ✅ |
+| **Pending approval limit** | Both topics and replies | max 6 pending | ✅ |
+
+* **Topic flood limit** — prevents a user from opening more than N new topics within a configurable time window (minutes). Useful on forums where topic spam is the main concern.
+* **Reply flood limit** — optionally limits how many replies a user may post in the same time window. Disabled by default because Flarum's 10-second throttle is usually enough for replies; enable it for stricter forums.
+* **Pending approval limit** — blocks further posting if the user already has too many posts/topics awaiting moderator approval. Avoids approval queues being swamped.
+
+Administrators are exempt from all limits.
 
 ## Compatibility
 
@@ -9,10 +27,17 @@
 | 1.x            | ✅        |
 | 2.x            | ✅        |
 
-## Features
-- Limits the creation of **maximum 3 topics per 5 minutes** for each user.
-- Blocks topic/post creation if there are already **6 posts or topics pending approval**.
-- Administrators are exempt from all restrictions.
+## Admin settings
+
+All limits and error messages can be customised in **Admin → Extensions → AntiFlood**:
+
+| Setting | Default | Description |
+|---|---|---|
+| Topic flood limit | 3 | Max new topics per interval |
+| Reply flood limit | 0 (off) | Max new replies per interval (0 = disabled) |
+| Flood interval | 5 min | Time window for flood checks |
+| Maximum pending posts | 6 | Max combined pending posts+topics before blocking |
+| Custom error messages | — | Override the default translated messages |
 
 ## Disclaimer
 
