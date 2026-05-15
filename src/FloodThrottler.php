@@ -73,8 +73,9 @@ class FloodThrottler
             ->count();
 
         if (($pendingPosts + $pendingDiscussions) >= $this->maxPending()) {
+            $custom = $this->settings->get('peopleinside-antiflood.pending_limit_message');
             $message = $this->resolveMessage(
-                $this->settings->get('peopleinside-antiflood.pending_limit_message'),
+                is_string($custom) ? $custom : null,
                 'peopleinside-antiflood.forum.error.pending_limit'
             );
 
@@ -91,8 +92,9 @@ class FloodThrottler
             ->count();
 
         if ($recentCount >= $limit) {
+            $custom = $this->settings->get('peopleinside-antiflood.flood_limit_message');
             $message = $this->resolveMessage(
-                $this->settings->get('peopleinside-antiflood.flood_limit_message'),
+                is_string($custom) ? $custom : null,
                 'peopleinside-antiflood.forum.error.flood_limit',
                 ['minutes' => $minutes]
             );
@@ -101,14 +103,13 @@ class FloodThrottler
         }
     }
 
-    protected function resolveMessage(mixed $customSetting, string $defaultKey, array $replacement = []): string
+    protected function resolveMessage(?string $custom, string $defaultKey, array $replacement = []): string
     {
-        $custom = is_string($customSetting) ? $customSetting : '';
-
-        if (trim($custom) === '') {
+        if ($custom === null || trim($custom) === '') {
             return $this->translator->get($defaultKey, $replacement);
         }
 
+        // Handle legacy values where a translation key was stored as custom text.
         if ($custom === $defaultKey) {
             return $this->translator->get($defaultKey, $replacement);
         }
