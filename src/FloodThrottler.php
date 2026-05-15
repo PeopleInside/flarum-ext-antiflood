@@ -114,7 +114,7 @@ class FloodThrottler
             return $this->translator->get($defaultKey, $replacement);
         }
 
-        if ($replacement !== []) {
+        if (!empty($replacement)) {
             $tokens = [];
             $values = [];
 
