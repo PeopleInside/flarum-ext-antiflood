@@ -18,3 +18,6 @@ peopleinside-antiflood:
       pending_limit_message_help: "Override the default error message shown when a user hits the pending-posts limit. Leave empty to use the default."
       flood_limit_message_label: "Custom message: flood limit reached"
       flood_limit_message_help: "Override the default error message shown when a user posts too quickly. Leave empty to use the default. You can use {minutes} as a placeholder."
+      pending_limit_message_suggestion: "You have too many posts or topics pending approval. Please wait until some are reviewed before creating new content."
+      flood_limit_message_suggestion: "You are posting too quickly. Please wait {minutes} minutes before posting again."
+      reset_button: "Reset"
