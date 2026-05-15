@@ -74,7 +74,10 @@ class FloodThrottler
 
         if (($pendingPosts + $pendingDiscussions) >= $this->maxPending()) {
             $custom = $this->settings->get('peopleinside-antiflood.pending_limit_message');
-            $message = $custom ?: $this->translator->get('peopleinside-antiflood.forum.error.pending_limit');
+            $message = $this->resolveMessage(
+                is_string($custom) ? $custom : null,
+                'peopleinside-antiflood.forum.error.pending_limit'
+            );
 
             throw new ValidationException(['content' => $message]);
         }
@@ -90,11 +93,39 @@ class FloodThrottler
 
         if ($recentCount >= $limit) {
             $custom = $this->settings->get('peopleinside-antiflood.flood_limit_message');
-            $message = $custom ?: $this->translator->get('peopleinside-antiflood.forum.error.flood_limit', [
-                'minutes' => $minutes,
-            ]);
+            $message = $this->resolveMessage(
+                is_string($custom) ? $custom : null,
+                'peopleinside-antiflood.forum.error.flood_limit',
+                ['minutes' => $minutes]
+            );
 
             throw new ValidationException(['content' => $message]);
         }
+    }
+
+    protected function resolveMessage(?string $custom, string $defaultKey, array $replacement = []): string
+    {
+        if ($custom === null || trim($custom) === '') {
+            return $this->translator->get($defaultKey, $replacement);
+        }
+
+        // Handle legacy values where a translation key was stored as custom text.
+        if ($custom === $defaultKey) {
+            return $this->translator->get($defaultKey, $replacement);
+        }
+
+        if (!empty($replacement)) {
+            $tokens = [];
+            $values = [];
+
+            foreach ($replacement as $key => $value) {
+                $tokens[] = '{'.$key.'}';
+                $values[] = (string) $value;
+            }
+
+            return str_replace($tokens, $values, $custom);
+        }
+
+        return $custom;
     }
 }
