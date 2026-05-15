@@ -21,7 +21,10 @@ type FlarumGlobal = {
   };
 };
 
-const flarumGlobal = (globalThis as { flarum?: FlarumGlobal }).flarum;
+const EXTENSION_IDS = ['peopleinside-antiflood', 'peopleinside-flarum-ext-antiflood'] as const;
+
+const flarumGlobal =
+  typeof globalThis !== 'undefined' ? (globalThis as { flarum?: FlarumGlobal }).flarum : undefined;
 const app =
   flarumGlobal?.core?.compat?.['admin/app'] ??
   flarumGlobal?.reg?.get('core', 'admin/app');
@@ -77,7 +80,7 @@ if (canRegisterSettings) {
       },
     ];
 
-    for (const extensionId of ['peopleinside-antiflood', 'peopleinside-flarum-ext-antiflood']) {
+    for (const extensionId of EXTENSION_IDS) {
       const extension = app.extensionData.for(extensionId);
 
       for (const setting of settings) {
