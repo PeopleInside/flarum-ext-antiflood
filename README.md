@@ -31,6 +31,9 @@ Administrators are exempt from all limits.
 
 All limits and error messages can be customised in **Admin → Extensions → AntiFlood**:
 
+<img width="1637" height="896" alt="Screenshot 2026-05-15 151232" src="https://github.com/user-attachments/assets/005c099e-96c4-4633-814d-65f9ca707380" />
+
+
 | Setting | Default | Description |
 |---|---|---|
 | Topic flood limit | 3 | Max new topics per interval |
