@@ -7,7 +7,7 @@
     "authors": [
         {
             "name": "Peopleinside",
-            "website": "https://github.com/PeopleInside/flarum-ext-antiflood"
+            "homepage": "https://github.com/PeopleInside/flarum-ext-antiflood"
         }
     ],
     "require": {
