@@ -114,8 +114,16 @@ class FloodThrottler
             return $this->translator->get($defaultKey, $replacement);
         }
 
-        if (array_key_exists('minutes', $replacement)) {
-            return str_replace('{minutes}', (string) $replacement['minutes'], $custom);
+        if ($replacement !== []) {
+            $tokens = [];
+            $values = [];
+
+            foreach ($replacement as $key => $value) {
+                $tokens[] = '{'.$key.'}';
+                $values[] = (string) $value;
+            }
+
+            return str_replace($tokens, $values, $custom);
         }
 
         return $custom;
