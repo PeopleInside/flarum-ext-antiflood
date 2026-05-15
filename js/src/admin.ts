@@ -1,5 +1,3 @@
-import m from 'mithril';
-
 type ExtensionDataContext = {
   registerSetting: (setting: Record<string, unknown> | (() => unknown)) => void;
 };
@@ -67,6 +65,10 @@ const FALLBACK_FLOOD_LIMIT_MESSAGE =
 
 const flarumGlobal =
   typeof globalThis !== 'undefined' ? (globalThis as { flarum?: FlarumGlobal }).flarum : undefined;
+const m =
+  typeof globalThis !== 'undefined'
+    ? (globalThis as { m?: (selector: string, attrs?: Record<string, unknown> | null, children?: unknown) => unknown }).m
+    : undefined;
 const app =
   flarumGlobal?.core?.compat?.['admin/app'] ??
   flarumGlobal?.reg?.get('core', 'admin/app');
@@ -117,6 +119,9 @@ const localizeExtensionDescription = () => {
 
 const createResettableSetting = (config: ResettableSettingConfig, resetLabel: string) => {
   return function renderResettableSetting(this: SettingsPageContext) {
+    if (!m) {
+      return null;
+    }
     const settingStream = this.setting(config.setting, config.default);
     const value = settingStream() || '';
 
