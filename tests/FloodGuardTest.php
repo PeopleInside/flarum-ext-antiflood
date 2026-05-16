@@ -20,10 +20,7 @@ test('FloodThrottler returns null for guest actors', function () {
     $actor->shouldReceive('isGuest')->andReturn(true);
     $actor->shouldNotReceive('isAdmin');
 
-    $request = Mockery::mock(\Psr\Http\Message\ServerRequestInterface::class);
-    $request->shouldReceive('getAttribute')
-        ->with('actor')
-        ->andReturn($actor);
+    $request = (new \GuzzleHttp\Psr7\ServerRequest('POST', '/'))->withAttribute('actor', $actor);
 
     expect($throttler($request))->toBeNull();
 });
@@ -37,11 +34,7 @@ test('FloodThrottler returns null for admin actors', function () {
     $actor->shouldReceive('isGuest')->andReturn(false);
     $actor->shouldReceive('isAdmin')->andReturn(true);
 
-    $request = Mockery::mock(\Psr\Http\Message\ServerRequestInterface::class);
-    $request->shouldReceive('getAttribute')
-        ->with('actor')
-        ->andReturn($actor);
+    $request = (new \GuzzleHttp\Psr7\ServerRequest('POST', '/'))->withAttribute('actor', $actor);
 
     expect($throttler($request))->toBeNull();
 });
-
