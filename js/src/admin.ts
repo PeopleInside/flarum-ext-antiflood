@@ -11,6 +11,10 @@ const FALLBACK_FLOOD_LIMIT_MESSAGE =
   'You are posting too quickly. Please wait {minutes} minutes before posting again.';
 
 const translateOrFallback = (key: string, fallback: string): string => {
+  if (!app.translator) {
+    return fallback;
+  }
+
   const translated = app.translator.trans(key);
 
   return translated === key ? fallback : translated;
@@ -27,7 +31,7 @@ const resolveDefaultMessage = (suggestionKey: string, forumErrorKey: string, fal
 };
 
 const localizeExtensionDescription = () => {
-  if (!app.data.extensions['peopleinside-antiflood']) {
+  if (!app.data?.extensions?.['peopleinside-antiflood']) {
     return;
   }
 
