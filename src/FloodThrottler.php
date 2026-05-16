@@ -14,6 +14,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class FloodThrottler
 {
+    private ?bool $hasApprovalColumns = null;
+
     public function __construct(
         private Translator $translator,
         private SettingsRepositoryInterface $settings
@@ -64,6 +66,10 @@ class FloodThrottler
 
     protected function checkPending(User $actor): void
     {
+        if (!$this->hasApprovalColumns()) {
+            return;
+        }
+
         $pendingPosts = Post::where('user_id', $actor->id)
             ->where('is_approved', false)
             ->count();
@@ -127,5 +133,19 @@ class FloodThrottler
         }
 
         return $custom;
+    }
+
+    protected function hasApprovalColumns(): bool
+    {
+        if ($this->hasApprovalColumns !== null) {
+            return $this->hasApprovalColumns;
+        }
+
+        $schema = Post::query()->getConnection()->getSchemaBuilder();
+
+        $this->hasApprovalColumns = $schema->hasColumn((new Post())->getTable(), 'is_approved')
+            && $schema->hasColumn((new Discussion())->getTable(), 'is_approved');
+
+        return $this->hasApprovalColumns;
     }
 }
