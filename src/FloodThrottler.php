@@ -10,7 +10,6 @@ use Flarum\Post\Post;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Flarum\User\User;
 use Illuminate\Contracts\Translation\Translator;
-use Illuminate\Database\Schema\Builder;
 use Psr\Http\Message\ServerRequestInterface;
 
 class FloodThrottler
@@ -19,8 +18,7 @@ class FloodThrottler
 
     public function __construct(
         private Translator $translator,
-        private SettingsRepositoryInterface $settings,
-        private Builder $schema
+        private SettingsRepositoryInterface $settings
     ) {}
 
     public function __invoke(ServerRequestInterface $request): ?bool
@@ -143,8 +141,10 @@ class FloodThrottler
             return $this->hasApprovalColumns;
         }
 
-        $this->hasApprovalColumns = $this->schema->hasColumn((new Post())->getTable(), 'is_approved')
-            && $this->schema->hasColumn((new Discussion())->getTable(), 'is_approved');
+        $schema = Post::query()->getConnection()->getSchemaBuilder();
+
+        $this->hasApprovalColumns = $schema->hasColumn((new Post())->getTable(), 'is_approved')
+            && $schema->hasColumn((new Discussion())->getTable(), 'is_approved');
 
         return $this->hasApprovalColumns;
     }
