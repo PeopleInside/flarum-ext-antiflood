@@ -66,6 +66,10 @@ composer require peopleinside/flarum-ext-antiflood
 ```bash
 composer update peopleinside/flarum-ext-antiflood
 ```
+Also send the following command:
+```bash
+php flarum assets:publish
+```
 
 ### 3. Uninstall via Composer
 
