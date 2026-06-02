@@ -31,7 +31,7 @@ const resolveDefaultMessage = (suggestionKey: string, forumErrorKey: string, fal
 };
 
 const localizeExtensionDescription = () => {
-  if (!app.data?.extensions?.['peopleinside-antiflood']) {
+  if (!app.data?.extensions?.['peopleinside-antiflood'] || !app.translator) {
     return;
   }
 
@@ -57,6 +57,10 @@ app.initializers.add('peopleinside-antiflood', () => {
     'peopleinside-antiflood.forum.error.flood_limit',
     FALLBACK_FLOOD_LIMIT_MESSAGE
   );
+
+  if (!app.extensionData || typeof app.extensionData.for !== 'function') {
+    return;
+  }
 
   const extension = app.extensionData.for('peopleinside-antiflood');
 
