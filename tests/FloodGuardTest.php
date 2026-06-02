@@ -3,21 +3,18 @@
 use Peopleinside\AntiFlood\FloodThrottler;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Illuminate\Contracts\Translation\Translator;
-use Illuminate\Database\ConnectionInterface;
 
 test('FloodThrottler can be instantiated', function () {
     $translator = Mockery::mock(Translator::class);
     $settings = Mockery::mock(SettingsRepositoryInterface::class);
-    $connection = Mockery::mock(ConnectionInterface::class);
-    $throttler = new FloodThrottler($translator, $settings, $connection);
+    $throttler = new FloodThrottler($translator, $settings);
     expect($throttler)->toBeInstanceOf(FloodThrottler::class);
 });
 
 test('FloodThrottler returns null for guest actors', function () {
     $translator = Mockery::mock(Translator::class);
     $settings = Mockery::mock(SettingsRepositoryInterface::class);
-    $connection = Mockery::mock(ConnectionInterface::class);
-    $throttler = new FloodThrottler($translator, $settings, $connection);
+    $throttler = new FloodThrottler($translator, $settings);
 
     $actor = Mockery::mock(\Flarum\User\User::class);
     $actor->shouldReceive('isGuest')->andReturn(true);
@@ -31,8 +28,7 @@ test('FloodThrottler returns null for guest actors', function () {
 test('FloodThrottler returns null for admin actors', function () {
     $translator = Mockery::mock(Translator::class);
     $settings = Mockery::mock(SettingsRepositoryInterface::class);
-    $connection = Mockery::mock(ConnectionInterface::class);
-    $throttler = new FloodThrottler($translator, $settings, $connection);
+    $throttler = new FloodThrottler($translator, $settings);
 
     $actor = Mockery::mock(\Flarum\User\User::class);
     $actor->shouldReceive('isGuest')->andReturn(false);
