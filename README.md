@@ -59,6 +59,7 @@ In your Flarum root directory, run the following command:
 
 ```bash
 composer require peopleinside/flarum-ext-antiflood
+php flarum assets:publish
 ```
 
 ### 2. Update via Composer
