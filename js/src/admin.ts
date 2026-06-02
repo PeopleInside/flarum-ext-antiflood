@@ -58,11 +58,13 @@ app.initializers.add('peopleinside-antiflood', () => {
     FALLBACK_FLOOD_LIMIT_MESSAGE
   );
 
-  if (!app.extensionData || typeof app.extensionData.for !== 'function') {
+  const adminRegistry = app.registry ?? app.extensionData;
+
+  if (!adminRegistry || typeof adminRegistry.for !== 'function') {
     return;
   }
 
-  const extension = app.extensionData.for('peopleinside-antiflood');
+  const extension = adminRegistry.for('peopleinside-antiflood');
 
   extension.registerSetting({
     setting: 'peopleinside-antiflood.max_pending',
