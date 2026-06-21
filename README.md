@@ -75,3 +75,15 @@ php flarum assets:publish
 composer remove peopleinside/flarum-ext-antiflood
 ```
 Packagist link: https://packagist.org/packages/peopleinside/flarum-ext-antiflood
+
+## Recommendations
+
+To get the most out of your forum's protection, this extension works best when combined with:
+
+### [First Post Approval by PeopleInside](https://github.com/PeopleInside/flarum-ext-first-post-approval)
+
+While **AntiFlood** prevents users from posting too frequently, **First Post Approval** holds the very first posts of new users for moderator review. Together, they provide a complete defense against spam and low-quality content from new accounts.
+
+Install it via Composer:
+```bash
+composer require peopleinside/flarum-ext-first-post-approval
