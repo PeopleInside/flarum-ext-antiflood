@@ -10,18 +10,15 @@ use Flarum\Post\Post;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Flarum\User\User;
 use Illuminate\Contracts\Translation\Translator;
-use Illuminate\Database\Schema\Builder; // Aggiunto per l'iniezione
 use Psr\Http\Message\ServerRequestInterface;
 
 class FloodThrottler
 {
-    // Modificato in static per persistere il cache tra le istanze
     private static ?bool $hasApprovalColumns = null;
 
     public function __construct(
         private Translator $translator,
-        private SettingsRepositoryInterface $settings,
-        private Builder $schema // Iniettato correttamente dal container DI
+        private SettingsRepositoryInterface $settings
     ) {}
 
     public function __invoke(ServerRequestInterface $request): ?bool
@@ -139,14 +136,14 @@ class FloodThrottler
 
     protected function hasApprovalColumns(): bool
     {
-        // Controlla la variabile statica
         if (self::$hasApprovalColumns !== null) {
             return self::$hasApprovalColumns;
         }
 
-        // Utilizza il Builder iniettato invece di passare dal modello
-        self::$hasApprovalColumns = $this->schema->hasColumn((new Post())->getTable(), 'is_approved')
-            && $this->schema->hasColumn((new Discussion())->getTable(), 'is_approved');
+        $schema = (new Post())->getConnection()->getSchemaBuilder();
+        
+        self::$hasApprovalColumns = $schema->hasColumn((new Post())->getTable(), 'is_approved')
+            && $schema->hasColumn((new Discussion())->getTable(), 'is_approved');
 
         return self::$hasApprovalColumns;
     }
