@@ -10,15 +10,18 @@ use Flarum\Post\Post;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Flarum\User\User;
 use Illuminate\Contracts\Translation\Translator;
+use Illuminate\Database\Schema\Builder; // Aggiunto per l'iniezione
 use Psr\Http\Message\ServerRequestInterface;
 
 class FloodThrottler
 {
-    private ?bool $hasApprovalColumns = null;
+    // Modificato in static per persistere il cache tra le istanze
+    private static ?bool $hasApprovalColumns = null;
 
     public function __construct(
         private Translator $translator,
-        private SettingsRepositoryInterface $settings
+        private SettingsRepositoryInterface $settings,
+        private Builder $schema // Iniettato correttamente dal container DI
     ) {}
 
     public function __invoke(ServerRequestInterface $request): ?bool
@@ -115,7 +118,6 @@ class FloodThrottler
             return $this->translator->get($defaultKey, $replacement);
         }
 
-        // Handle legacy values where a translation key was stored as custom text.
         if ($custom === $defaultKey) {
             return $this->translator->get($defaultKey, $replacement);
         }
@@ -137,15 +139,15 @@ class FloodThrottler
 
     protected function hasApprovalColumns(): bool
     {
-        if ($this->hasApprovalColumns !== null) {
-            return $this->hasApprovalColumns;
+        // Controlla la variabile statica
+        if (self::$hasApprovalColumns !== null) {
+            return self::$hasApprovalColumns;
         }
 
-        $schema = Post::query()->getConnection()->getSchemaBuilder();
+        // Utilizza il Builder iniettato invece di passare dal modello
+        self::$hasApprovalColumns = $this->schema->hasColumn((new Post())->getTable(), 'is_approved')
+            && $this->schema->hasColumn((new Discussion())->getTable(), 'is_approved');
 
-        $this->hasApprovalColumns = $schema->hasColumn((new Post())->getTable(), 'is_approved')
-            && $schema->hasColumn((new Discussion())->getTable(), 'is_approved');
-
-        return $this->hasApprovalColumns;
+        return self::$hasApprovalColumns;
     }
 }
