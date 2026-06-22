@@ -7,6 +7,7 @@
   "authors": [
     {
       "name": "Peopleinside",
+      "email": "tickets@peopleinside-it.p.tawk.email",
       "homepage": "https://github.com/PeopleInside/flarum-ext-antiflood"
     }
   ],

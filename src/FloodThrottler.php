@@ -14,7 +14,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class FloodThrottler
 {
-    private ?bool $hasApprovalColumns = null;
+    private static ?bool $hasApprovalColumns = null;
 
     public function __construct(
         private Translator $translator,
@@ -115,7 +115,6 @@ class FloodThrottler
             return $this->translator->get($defaultKey, $replacement);
         }
 
-        // Handle legacy values where a translation key was stored as custom text.
         if ($custom === $defaultKey) {
             return $this->translator->get($defaultKey, $replacement);
         }
@@ -137,15 +136,15 @@ class FloodThrottler
 
     protected function hasApprovalColumns(): bool
     {
-        if ($this->hasApprovalColumns !== null) {
-            return $this->hasApprovalColumns;
+        if (self::$hasApprovalColumns !== null) {
+            return self::$hasApprovalColumns;
         }
 
-        $schema = Post::query()->getConnection()->getSchemaBuilder();
-
-        $this->hasApprovalColumns = $schema->hasColumn((new Post())->getTable(), 'is_approved')
+        $schema = (new Post())->getConnection()->getSchemaBuilder();
+        
+        self::$hasApprovalColumns = $schema->hasColumn((new Post())->getTable(), 'is_approved')
             && $schema->hasColumn((new Discussion())->getTable(), 'is_approved');
 
-        return $this->hasApprovalColumns;
+        return self::$hasApprovalColumns;
     }
 }

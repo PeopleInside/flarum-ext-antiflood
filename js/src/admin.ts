@@ -30,28 +30,13 @@ const resolveDefaultMessage = (suggestionKey: string, forumErrorKey: string, fal
   return translateOrFallback(forumErrorKey, fallback);
 };
 
-const localizeExtensionDescription = () => {
-  if (!app.data?.extensions?.['peopleinside-antiflood'] || !app.translator) {
-    return;
-  }
-
-  const localizedDescription = app.translator.trans('peopleinside-antiflood.admin.description');
-
-  if (localizedDescription === 'peopleinside-antiflood.admin.description') {
-    return;
-  }
-
-  app.data.extensions['peopleinside-antiflood'].description = localizedDescription;
-};
-
 app.initializers.add('peopleinside-antiflood', () => {
-  localizeExtensionDescription();
-
   const pendingLimitDefaultMessage = resolveDefaultMessage(
     'peopleinside-antiflood.admin.settings.pending_limit_message_suggestion',
     'peopleinside-antiflood.forum.error.pending_limit',
     FALLBACK_PENDING_LIMIT_MESSAGE
   );
+  
   const floodLimitDefaultMessage = resolveDefaultMessage(
     'peopleinside-antiflood.admin.settings.flood_limit_message_suggestion',
     'peopleinside-antiflood.forum.error.flood_limit',
